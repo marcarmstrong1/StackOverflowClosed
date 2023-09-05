@@ -5,6 +5,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import tensorflow as tf
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
 
 #Removes Stopwords with nltk
 def remove_stopwords(sentence):
@@ -107,10 +108,14 @@ def create_model(num_words, embedding_dim, maxlen):
     
     model = tf.keras.Sequential([ 
         tf.keras.layers.Embedding(num_words, embedding_dim, input_length=maxlen),
-        tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences = True)),
-        tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32)),
-        tf.keras.layers.Dense(64, activation='relu'),
-        tf.keras.layers.Dense(5, activation='softmax')
+        tf.keras.layers.Conv1D(128, kernel_size=4, padding='same', activation='relu'),
+        tf.keras.layers.MaxPooling1D(pool_size=2),
+        tf.keras.layers.Conv1D(64, kernel_size=4, padding='same', activation='relu'),
+        tf.keras.layers.MaxPooling1D(pool_size=2),
+        tf.keras.layers.Conv1D(32, kernel_size=4, padding='same', activation='relu'),
+        tf.keras.layers.MaxPooling1D(pool_size=2),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(5, activation='sigmoid')
     ])
     
     model.compile(loss='sparse_categorical_crossentropy',
@@ -126,3 +131,4 @@ def print_cm(val_labels, df):
     ax.set_title('Confusion Matrix')
     ax.set_xlabel('Y Test')
     ax.set_ylabel('Y Pred')
+    plt.show()

@@ -43,7 +43,7 @@ print(f"Padded validation sequences have shape: {val_padded_seq.shape}")
 
 #Create the model and fit
 model = create_model(NUM_WORDS, EMBEDDING_DIM, MAXLEN)
-history = model.fit(train_padded_seq, train_labels, epochs=10, validation_data=(val_padded_seq, val_labels))
+history = model.fit(train_padded_seq, train_labels, epochs=2, validation_data=(val_padded_seq, val_labels))
   
 t = model.predict(val_padded_seq)
 t  = pd.DataFrame(t)
